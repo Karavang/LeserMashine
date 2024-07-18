@@ -1,17 +1,17 @@
-const { GetObjectCommand } = require("@aws-sdk/client-s3");
-
+const AWS = require("aws-sdk");
+const s3 = new AWS.S3();
 const getAllBooks = async (req, res) => {
   const input = {
     Bucket: "elasticbeanstalk-eu-west-3-507450525930",
     Key: "test.txt",
   };
-  const command = new GetObjectCommand(input);
-  const response = await client.send(command);
-
-  if (!response) {
-    res.status(500).json(response);
-  } else {
-    res.status(200).json(response);
-  }
+  const name = req.body.filename;
+  const data = await s3
+    .getObject({
+      Bucket: input.Bucket,
+      Key: name,
+    })
+    .promise();
+  res.send(data.Body);
 };
 module.exports = getAllBooks;
