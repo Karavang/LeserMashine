@@ -18,6 +18,7 @@ const getAllBooks = async (req, res) => {
       lastModified: book.LastModified,
     };
   });
+
   res.status(200).json(books);
 };
 
