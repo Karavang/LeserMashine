@@ -17,12 +17,23 @@ const getBook = async (req, res) => {
     const ext = getFileExtension(name);
     if (ext === "epub") {
       epubParser.open(data.Body, function (err, epubData) {
-        if (err) return console.log(err);
-        console.log(convertArrayToObject(epubData.easy.simpleMeta));
+        if (err) {
+          // Handle error
+          console.error(err);
+          res.status(500).send({ error: "Error parsing EPUB file" });
+        } else {
+          const metaData = convertArrayToObject(epubData.easy.simpleMeta);
+          const bookInfo = {
+            title: metaData.dc_title,
+            author: metaData.dc_creator,
+            date: metaData.dc_date,
+            lang: metaData.dc_language,
+            desc: metaData.dc_description,
+          };
+          res.status(200).send({ bookInfo, data: data });
+        }
       });
     }
-
-    res.status(200).send(data);
   } catch (error) {
     if (error.code === "NoSuchKey") {
       res.status(404).send("File not found");
