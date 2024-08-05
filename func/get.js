@@ -18,7 +18,6 @@ const getBook = async (req, res) => {
     if (ext === "epub") {
       epubParser.open(data.Body, function (err, epubData) {
         if (err) {
-          // Handle error
           console.error(err);
           res.status(500).send({ error: "Error parsing EPUB file" });
         } else {
