@@ -30,7 +30,7 @@ const getBook = async (req, res) => {
             lang: metaData.dc_language,
             desc: metaData.dc_description,
           };
-          res.status(200).send({ bookInfo, data: data });
+          res.status(200).send(data.Body);
         }
       });
     }
