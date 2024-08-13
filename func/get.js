@@ -2,6 +2,7 @@ const s3 = require("../import3");
 const getFileExtension = require("../getExt");
 const epubParser = require("epub-parser");
 const convertArrayToObject = require("../hooks/forParseEpub");
+const extractEpubInfo = require("../hooks/epubConnect");
 
 const getBook = async (req, res) => {
   try {
@@ -16,6 +17,18 @@ const getBook = async (req, res) => {
 
     const ext = getFileExtension(name);
     if (ext === "epub") {
+      // const resPub = await extractEpubInfo(data.Body);
+
+      // console.log("Title:", resPub.title);
+      // console.log("Author:", resPub.author);
+      // if (result.image) {
+      //   const imageOutputPath = path.join(__dirname, "extracted_image.jpg");
+      //   fs.writeFileSync(imageOutputPath, resPub.image);
+      //   console.log("Image saved to:", imageOutputPath);
+      // } else {
+      //   console.log("No image found.");
+      // }
+
       epubParser.open(data.Body, function (err, epubData) {
         if (err) {
           console.error(err);
@@ -29,7 +42,7 @@ const getBook = async (req, res) => {
             lang: metaData.dc_language,
             desc: metaData.dc_description,
           };
-          res.status(200).send(data.Body);
+          res.status(200).send(bookInfo);
         }
       });
     }
