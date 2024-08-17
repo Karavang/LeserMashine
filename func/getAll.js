@@ -19,8 +19,6 @@ const getAllBooks = async (req, res) => {
     for (const book of data.Contents) {
       const name = book.Key.split("/").pop();
       const bookInfo = await getBookInfo(name);
-      console.log(bookInfo);
-
       books.push(bookInfo);
     }
 

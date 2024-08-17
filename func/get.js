@@ -15,8 +15,6 @@ const getBookContent = async (req, res) => {
       })
       .promise();
 
-    const ext = getFileExtension(name);
-
     res.status(200).send(data.Body);
   } catch (error) {
     if (error.code === "NoSuchKey") {
