@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require("cors");
 const router = require("./router");
+const { mongoConnect } = require("./mongoDB");
 require("dotenv/config");
 const app = express();
 const startServer = async () => {
+  await mongoConnect();
   app.listen(5555, () => {
     console.log("Server woke up");
   });

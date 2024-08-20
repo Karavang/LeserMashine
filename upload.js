@@ -11,7 +11,7 @@ const upload = multer({
     acl: "public-read",
     key: (req, file, cb) => {
       const ext = getFileExtension(file.originalname);
-      console.log(ext);
+
       if (ext === "epub" || ext === "fb2" || ext === "pdf") {
         cb(null, `books/${file.originalname}`);
       }

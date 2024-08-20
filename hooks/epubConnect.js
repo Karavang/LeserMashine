@@ -16,7 +16,6 @@ async function extractEpubInfo(epubBuffer) {
 
     pythonProcess.stderr.on("data", (data) => {
       error += data.toString();
-      console.log(data.toString());
     });
 
     pythonProcess.on("error", (err) => {
