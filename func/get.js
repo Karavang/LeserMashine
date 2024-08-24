@@ -1,13 +1,17 @@
 const s3 = require("../import3");
-const getFileExtension = require("../getExt");
-const epubParser = require("epub-parser");
-const convertArrayToObject = require("../hooks/forParseEpub");
-const extractEpubInfo = require("../hooks/epubConnect");
+const fs = require("fs");
+const path = require("path");
+const express = require("express");
+const app = express();
+
+// Ensure the timeBooks directory exists
+
+// Serve static files from the booksDir directory
 
 const getBookContent = async (req, res) => {
+  const booksDir = path.join(__dirname, "../timeBooks/books");
   try {
     const name = req.params.filename;
-
     const data = await s3
       .getObject({
         Bucket: "elasticbeanstalk-eu-west-3-507450525930/books",
@@ -15,7 +19,19 @@ const getBookContent = async (req, res) => {
       })
       .promise();
 
-    res.status(200).send(data.Body);
+    const epubBuffer = Buffer.from(data.Body);
+    const filePath = path.join(booksDir, name);
+    console.log(booksDir);
+
+    // Write the file synchronously
+    fs.writeFileSync(filePath, epubBuffer);
+    if (fs.existsSync(filePath)) {
+      console.log("File exists at:", filePath);
+    } else {
+      console.error("File was not found after saving:", filePath);
+    }
+    // Return the file URL
+    res.status(200).send(`http://localhost:5555/books/${name}`);
   } catch (error) {
     if (error.code === "NoSuchKey") {
       res.status(404).send("File not found");
