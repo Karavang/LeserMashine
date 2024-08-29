@@ -12,7 +12,7 @@ const upload = multer({
     key: (req, file, cb) => {
       const ext = getFileExtension(file.originalname);
 
-      if (ext === "epub" || ext === "fb2" || ext === "pdf") {
+      if (ext === "epub" || ext === "fb2") {
         cb(null, `books/${file.originalname}`);
       }
     },
