@@ -21,12 +21,10 @@ const getBookContent = async (req, res) => {
 
     const epubBuffer = Buffer.from(data.Body);
     const filePath = path.join(booksDir, name);
-    console.log(booksDir);
 
     // Write the file synchronously
     fs.writeFileSync(filePath, epubBuffer);
     if (fs.existsSync(filePath)) {
-      console.log("File exists at:", filePath);
     } else {
       console.error("File was not found after saving:", filePath);
     }

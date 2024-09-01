@@ -5,31 +5,38 @@ const getFileExtension = require("./getExt");
 const getBookInfo = require("./hooks/getBookInfo");
 const { Post } = require("./mongoDB");
 
-const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: "elasticbeanstalk-eu-west-3-507450525930",
+const uploadToS3AndSaveToDb = async (req, res, next) => {
+  if (!req.file) {
+    return next(new Error("No file uploaded"));
+  }
 
-    acl: "public-read",
-    key: async (req, file, cb) => {
-      // make the key function async
-      try {
-        const ext = getFileExtension(file.originalname);
-        const bookData = await getBookInfo(file); // use await to get book info
-        console.log(bookData);
-        await Post.create(bookData); // save book info to MongoDB
+  try {
+    const ext = getFileExtension(req.file.originalname);
 
-        if (ext === "epub" || ext === "fb2") {
-          cb(null, `books/${file.originalname}`);
-        } else {
-          cb(new Error("Invalid file type"), false); // handle unsupported file types
-        }
-      } catch (error) {
-        console.error("Error processing file:", error);
-        cb(error, false); // handle any error that occurs during processing
-      }
-    },
-  }),
-});
+    if (ext !== "epub" && ext !== "fb2") {
+      throw new Error("Invalid file type");
+    }
 
-module.exports = upload;
+    const bookData = await getBookInfo(req.file.originalname, req.file.buffer);
+
+    await Post.create(bookData);
+    const dataFromMongo = await Post.findOne({ title: bookData.title });
+
+    const params = {
+      Bucket: "elasticbeanstalk-eu-west-3-507450525930",
+      Key: `books/${dataFromMongo._id.toString()}.${ext}`,
+      Body: req.file.buffer,
+      ACL: "public-read",
+    };
+
+    const s3UploadResult = await s3.upload(params).promise();
+    req.fileLocation = s3UploadResult.Location;
+
+    next();
+  } catch (error) {
+    console.error("Error processing file:", error);
+    next(error);
+  }
+};
+
+module.exports = uploadToS3AndSaveToDb;

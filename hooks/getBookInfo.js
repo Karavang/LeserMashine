@@ -1,29 +1,24 @@
-const s3 = require("../import3");
 const getFileExtension = require("../getExt");
 const parseEpub = require("../parsers/parserEpub");
 const parseFb2 = require("../parsers/parsfb2");
 
-const getBookInfo = async (name) => {
-  if (name !== undefined) {
+const getBookInfo = async (name, data) => {
+  if (name !== undefined && Buffer.isBuffer(data)) {
     try {
-      const data = await s3
-        .getObject({
-          Bucket: "elasticbeanstalk-eu-west-3-507450525930/books",
-          Key: name,
-        })
-        .promise();
-
+      console.log("Received data buffer of length:", data.length);
       const ext = getFileExtension(name);
 
+      const stringData = data.toString("utf-8");
+
       if (ext === "epub") {
-        return parseEpub(data, name);
+        return parseEpub(stringData, name);
       } else if (ext === "fb2") {
-        return parseFb2(data, name);
+        return parseFb2(stringData, name);
       } else {
-        return "it isn't epub or fb2";
+        return "It isn't epub or fb2";
       }
     } catch (error) {
-      console.error("Error fetching file from S3: ", error);
+      console.error("Error processing file: ", error);
       return null;
     }
   }

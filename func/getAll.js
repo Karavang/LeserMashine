@@ -1,33 +1,34 @@
-const getBookInfo = require("../hooks/getBookInfo");
+const getBookInfoForMongo = require("../hooks/getBookInfoForMongo");
 const s3 = require("../import3");
 const { Post } = require("../mongoDB");
 
 const getAllBooks = async (req, res) => {
-  const input = {
-    Bucket: "elasticbeanstalk-eu-west-3-507450525930",
-  };
+  // const input = {
+  //   Bucket: "elasticbeanstalk-eu-west-3-507450525930",
+  // };
 
   try {
-    // const data = await s3
-    //   .listObjectsV2({
-    //     Bucket: input.Bucket,
-    //     Prefix: "books/",
-    //   })
-    //   .promise();
+    //   const data = await s3
+    //     .listObjectsV2({
+    //       Bucket: input.Bucket,
+    //       Prefix: "books/",
+    //     })
+    //     .promise();
 
-    // const books = [];
+    //   const books = [];
 
-    // for (const book of data.Contents) {
-    //   const name = book.Key.split("/").pop();
+    //   for (const book of data.Contents) {
+    //     const name = book.Key.split("/").pop();
+    //     console.log(name);
+    //     const bookInfo = await getBookInfoForMongo(name);
 
-    //   const bookInfo = await getBookInfo(name);
-    //   const post = await Post.findOne({ filename: name });
+    //     const post = await Post.findOne({ filename: name });
 
-    //   if (!post && typeof bookInfo === "object") {
-    //     Post.create(bookInfo);
+    //     if (!post && typeof bookInfo === "object") {
+    //       Post.create(bookInfo);
+    //     }
+    //     books.push(bookInfo);
     //   }
-    //   books.push(bookInfo);
-    // }
     const books = await Post.find();
     res.status(200).json(books);
   } catch (error) {

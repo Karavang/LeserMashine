@@ -1,21 +1,29 @@
 const { Router } = require("express");
 
 const addNewBook = require("./func/post");
-const s3upload = require("./upload");
+const { handleFileUpload, processUpload } = require("./upload");
 const getAllBooks = require("./func/getAll");
 const deleteOne = require("./func/delete");
 const getBookContent = require("./func/get");
-const mongoPost = require("./middleware/mongoPost");
+const multer = require("multer");
+const uploadToS3AndSaveToDb = require("./upload");
 
 const router = new Router();
 
 router.get("/downloadOne/:filename", getBookContent);
 router.get("/getAll", getAllBooks);
+const upload = multer({ storage: multer.memoryStorage() });
+// Updated route for adding a new book
 router.post(
   "/putNewOne",
-  // mongoPost.single("file"),
-  s3upload.single("file"),
-  addNewBook,
+  upload.single("file"),
+  uploadToS3AndSaveToDb,
+  (req, res) => {
+    res.json({
+      message: "File uploaded successfully",
+      location: req.fileLocation,
+    });
+  },
 );
 
 router.delete("/deleteOne/:filename", deleteOne);

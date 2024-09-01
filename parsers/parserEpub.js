@@ -3,7 +3,7 @@ const convertArrayToObject = require("../hooks/forParseEpub");
 
 const parseEpub = (data, name) => {
   return new Promise((resolve, reject) => {
-    epubParser.open(data.Body, function (err, epubData) {
+    epubParser.open(data, function (err, epubData) {
       if (err) {
         reject(err);
       } else {

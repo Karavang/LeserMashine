@@ -3,7 +3,7 @@ const parser = new xml2js.Parser({ explicitArray: false });
 
 const parseFb2 = (data, name) => {
   return new Promise((resolve, reject) => {
-    const fb2Data = data.Body.toString();
+    const fb2Data = data.toString();
     parser.parseString(fb2Data, (err, result) => {
       if (err) {
         reject(err);
