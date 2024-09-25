@@ -11,7 +11,7 @@ const getBookInfo = async (name, data) => {
       const stringData = data.toString("utf-8");
 
       if (ext === "epub") {
-        return parseEpub(stringData, name);
+        return parseEpub(data, name);
       } else if (ext === "fb2") {
         return parseFb2(stringData, name);
       } else {
