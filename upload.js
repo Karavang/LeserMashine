@@ -21,7 +21,10 @@ const uploadToS3AndSaveToDb = async (req, res, next) => {
 
     await Post.create(bookData);
     const dataFromMongo = await Post.findOne({ title: bookData.title });
-
+    await Post.findByIdAndUpdate(
+      { _id: dataFromMongo._id },
+      { filename: `${dataFromMongo._id.toString()}.${ext}` },
+    );
     const params = {
       Bucket: "elasticbeanstalk-eu-west-3-507450525930",
       Key: `books/${dataFromMongo._id.toString()}.${ext}`,

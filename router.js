@@ -13,7 +13,7 @@ const router = new Router();
 router.get("/downloadOne/:filename", getBookContent);
 router.get("/getAll", getAllBooks);
 const upload = multer({ storage: multer.memoryStorage() });
-// Updated route for adding a new book
+
 router.post(
   "/putNewOne",
   upload.single("file"),
