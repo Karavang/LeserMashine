@@ -12,7 +12,7 @@ const schemaPost = new Schema(
     },
     date: {
       type: String,
-      required: true,
+      required: false,
     },
     lang: {
       type: String,
