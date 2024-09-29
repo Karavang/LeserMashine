@@ -33,9 +33,9 @@ const schemaPost = new Schema(
 const Post = model("books", schemaPost);
 
 const mongoConnect = async () => {
-  console.log(fromenv.MONGO);
+  
   try {
-    console.log(fromenv.MONGO);
+    
     await connect(fromenv.MONGO);
 
     console.log("connected");
