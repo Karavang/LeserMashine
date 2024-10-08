@@ -2,6 +2,7 @@ const s3 = require("../import3");
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
+const { GetObjectCommand } = require("@aws-sdk/client-s3");
 const app = express();
 
 // Ensure the timeBooks directory exists
