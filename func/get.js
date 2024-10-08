@@ -12,12 +12,12 @@ const getBookContent = async (req, res) => {
   const booksDir = path.join(__dirname, "../timeBooks/books");
   try {
     const name = req.params.filename;
-    const data = await s3
-      .getObject({
+    const data = await s3.send(
+      new GetObjectCommand({
         Bucket: "elasticbeanstalk-eu-west-3-507450525930/books",
         Key: name,
-      })
-      .promise();
+      }),
+    );
 
     const epubBuffer = Buffer.from(data.Body);
     const filePath = path.join(booksDir, name);
