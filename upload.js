@@ -1,9 +1,12 @@
 const multer = require("multer");
-const s3 = require("./import3");
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const multerS3 = require("multer-s3");
 const getFileExtension = require("./getExt");
 const getBookInfo = require("./hooks/getBookInfo");
 const { Post } = require("./mongoDB");
+
+// Create S3 client
+const s3Client = new S3Client({ region: "eu-west-3" }); // Replace with your region
 
 const uploadToS3AndSaveToDb = async (req, res, next) => {
   if (!req.file) {
@@ -13,7 +16,7 @@ const uploadToS3AndSaveToDb = async (req, res, next) => {
   try {
     const ext = getFileExtension(req.file.originalname);
 
-    if (ext !== "epub" && ext !== "fb2") {
+    if (ext !== "epub" && ext !== "fb2" && ext !== "pdf") {
       throw new Error("Invalid file type");
     }
 
@@ -25,6 +28,7 @@ const uploadToS3AndSaveToDb = async (req, res, next) => {
       { _id: dataFromMongo._id },
       { filename: `${dataFromMongo._id.toString()}.${ext}` },
     );
+
     const params = {
       Bucket: "elasticbeanstalk-eu-west-3-507450525930",
       Key: `books/${dataFromMongo._id.toString()}.${ext}`,
@@ -32,8 +36,11 @@ const uploadToS3AndSaveToDb = async (req, res, next) => {
       ACL: "public-read",
     };
 
-    const s3UploadResult = await s3.upload(params).promise();
-    req.fileLocation = s3UploadResult.Location;
+    const command = new PutObjectCommand(params);
+    const s3UploadResult = await s3Client.send(command);
+
+    // In v3, the Location is not returned directly. You need to construct it.
+    req.fileLocation = `https://${params.Bucket}.s3.amazonaws.com/${params.Key}`;
 
     next();
   } catch (error) {
