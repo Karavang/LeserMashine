@@ -1,7 +1,7 @@
 const { User } = require("../mongoDB");
-require("dotenv").config();
-const secret = process.env.JWT_SECRET;
-const registration = async () => {
+
+const registration = async (req, res, next) => {
+  console.log(req.body);
   const { username, email, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {

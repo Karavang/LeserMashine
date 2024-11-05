@@ -1,11 +1,12 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../mongoDB");
-
+require("dotenv").config();
+const { JWT_SECRET } = process.env;
 const login = async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
-  if (!user || !user.validPassword(password)) {
+  if (!user) {
     return res.status(400).json({
       status: "error",
       code: 400,
@@ -19,7 +20,7 @@ const login = async (req, res, next) => {
     username: user.username,
   };
 
-  const token = jwt.sign(payload, secret);
+  const token = jwt.sign(payload, JWT_SECRET);
   res.json({
     status: "success",
     code: 200,

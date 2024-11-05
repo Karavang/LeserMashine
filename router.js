@@ -7,6 +7,9 @@ const deleteOne = require("./func/delete");
 const getBookContent = require("./func/get");
 const multer = require("multer");
 const uploadToS3AndSaveToDb = require("./upload");
+const login = require("./auth/login");
+const auth = require("./auth/auth");
+const registration = require("./auth/create");
 
 const router = new Router();
 
@@ -25,7 +28,9 @@ router.post(
     });
   },
 );
-
 router.delete("/deleteOne/:filename", deleteOne);
+// Authorization
+router.post("/registration", registration);
+router.post("/login", login);
 
 module.exports = router;

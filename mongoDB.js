@@ -39,9 +39,13 @@ const schemaUser = new Schema({
     type: String,
     required: true,
   },
-  token: {
+  email: {
     type: String,
     required: true,
+  },
+  token: {
+    type: String,
+    required: false,
   },
 });
 
