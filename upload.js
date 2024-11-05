@@ -5,8 +5,7 @@ const getFileExtension = require("./getExt");
 const getBookInfo = require("./hooks/getBookInfo");
 const { Post } = require("./mongoDB");
 
-// Create S3 client
-const s3Client = new S3Client({ region: "eu-west-3" }); // Replace with your region
+const s3Client = new S3Client({ region: "eu-west-3" });
 
 const uploadToS3AndSaveToDb = async (req, res, next) => {
   if (!req.file) {
@@ -39,7 +38,6 @@ const uploadToS3AndSaveToDb = async (req, res, next) => {
     const command = new PutObjectCommand(params);
     const s3UploadResult = await s3Client.send(command);
 
-    // In v3, the Location is not returned directly. You need to construct it.
     req.fileLocation = `https://${params.Bucket}.s3.amazonaws.com/${params.Key}`;
 
     next();

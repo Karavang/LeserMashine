@@ -30,8 +30,23 @@ const schemaPost = new Schema(
   { versionKey: false },
 );
 
-const Post = model("books", schemaPost);
+const schemaUser = new Schema({
+  username: {
+    type: String,
+    required: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  token: {
+    type: String,
+    required: true,
+  },
+});
 
+const Post = model("books", schemaPost);
+const User = model("lesers", schemaUser);
 const mongoConnect = async () => {
   try {
     await connect(fromenv.MONGO);
@@ -42,4 +57,4 @@ const mongoConnect = async () => {
   }
 };
 
-module.exports = { Post, mongoConnect };
+module.exports = { Post, User, mongoConnect };
