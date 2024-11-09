@@ -1,5 +1,8 @@
 const validateEmail = require("../middleware/validation/email");
+const jwt = require("jsonwebtoken");
 const { User } = require("../mongoDB");
+require("dotenv").config();
+const { JWT_SECRET } = process.env;
 
 const registration = async (req, res, next) => {
   const { username, email, password } = req.body;
@@ -22,7 +25,9 @@ const registration = async (req, res, next) => {
     });
   }
   try {
-    const newUser = new User({ username, email, password });
+    const token = " ";
+    const isAdmin = false;
+    const newUser = new User({ username, email, password, token, isAdmin });
     await newUser.save();
     res.status(201).json({
       status: "success",

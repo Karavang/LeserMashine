@@ -26,6 +26,7 @@ const uploadToS3AndSaveToDb = async (req, res, next) => {
     await Post.findByIdAndUpdate(
       { _id: dataFromMongo._id },
       { filename: `${dataFromMongo._id.toString()}.${ext}` },
+      // {owner:}
     );
 
     const params = {

@@ -26,6 +26,10 @@ const schemaPost = new Schema(
       type: String,
       required: true,
     },
+    owner: {
+      type: String,
+      required: false,
+    },
   },
   { versionKey: false },
 );
@@ -43,9 +47,13 @@ const schemaUser = new Schema({
     type: String,
     required: true,
   },
+  isAdmin: {
+    type: Boolean,
+    required: true,
+  },
   token: {
     type: String,
-    required: false,
+    required: true,
   },
 });
 

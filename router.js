@@ -10,6 +10,7 @@ const uploadToS3AndSaveToDb = require("./upload");
 const login = require("./auth/login");
 const auth = require("./auth/auth");
 const registration = require("./auth/create");
+const logout = require("./auth/logout");
 
 const router = new Router();
 
@@ -32,5 +33,6 @@ router.delete("/deleteOne/:filename", deleteOne);
 // Authorization
 router.post("/registration", registration);
 router.post("/login", login);
+router.get("/logout", logout);
 
 module.exports = router;
