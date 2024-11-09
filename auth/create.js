@@ -2,7 +2,6 @@ const validateEmail = require("../middleware/validation/email");
 const { User } = require("../mongoDB");
 
 const registration = async (req, res, next) => {
-  console.log(req.body);
   const { username, email, password } = req.body;
   const isEmail = validateEmail(email);
   if (!isEmail) {
