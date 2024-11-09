@@ -1,8 +1,18 @@
+const validateEmail = require("../middleware/validation/email");
 const { User } = require("../mongoDB");
 
 const registration = async (req, res, next) => {
   console.log(req.body);
   const { username, email, password } = req.body;
+  const isEmail = validateEmail(email);
+  if (!isEmail) {
+    return res.status(409).json({
+      status: "error",
+      code: 409,
+      message: "It isn't email",
+      data: "Conflict",
+    });
+  }
   const user = await User.findOne({ email });
   if (user) {
     return res.status(409).json({
