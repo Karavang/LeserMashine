@@ -1,7 +1,5 @@
 const { Router } = require("express");
 
-const addNewBook = require("./func/post");
-const { handleFileUpload, processUpload } = require("./upload");
 const getAllBooks = require("./func/getAll");
 const deleteOne = require("./func/delete");
 const getBookContent = require("./func/get");
@@ -11,16 +9,19 @@ const login = require("./auth/login");
 const auth = require("./auth/auth");
 const registration = require("./auth/create");
 const logout = require("./auth/logout");
+const updateMongo = require("./hooks/updateMongo");
 
 const router = new Router();
 
-router.get("/downloadOne/:filename", getBookContent);
-router.get("/getAll", getAllBooks);
+router.get("/downloadOne/:filename", auth, getBookContent);
+router.get("/getAll", auth, getAllBooks);
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.post(
   "/putNewOne",
+
   upload.single("file"),
+  auth,
   uploadToS3AndSaveToDb,
   (req, res) => {
     res.json({
@@ -29,6 +30,7 @@ router.post(
     });
   },
 );
+router.get("/synchronizeBooks", auth, updateMongo);
 router.delete("/deleteOne/:filename", deleteOne);
 // Authorization
 router.post("/registration", registration);

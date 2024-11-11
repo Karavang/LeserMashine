@@ -1,24 +1,26 @@
-const s3 = require("../import3");
+const { S3Client, GetObjectCommand } = require("@aws-sdk/client-s3");
 const getFileExtension = require("../getExt");
 const parseEpub = require("../parsers/parserEpub");
 const parseFb2 = require("../parsers/parsfb2");
 
 const getBookInfo = async (name) => {
+  const client = new S3Client({ region: "eu-west-3" });
   if (name !== undefined) {
     try {
-      const data = await s3
-        .getObject({
-          Bucket: "elasticbeanstalk-eu-west-3-507450525930/books",
-          Key: name,
-        })
-        .promise();
+      console.log(name);
+      const data = await client.send(
+        new GetObjectCommand({
+          Bucket: "elasticbeanstalk-eu-west-3-507450525930",
+          Key: `books/${name}`,
+        }),
+      );
 
       const ext = getFileExtension(name);
 
       if (ext === "epub") {
-        return parseEpub(data.Body, name);
+        return parseEpub(await data.Body.transformToByteArray(), name);
       } else if (ext === "fb2") {
-        return parseFb2(data.Body, name);
+        return parseFb2(await data.Body.transformToString(), name);
       } else {
         return "it isn't epub or fb2";
       }
