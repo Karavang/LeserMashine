@@ -18,7 +18,7 @@ const getBookInfo = async (name) => {
       const ext = getFileExtension(name);
 
       if (ext === "epub") {
-        return parseEpub(await data.Body.transformToByteArray(), name);
+        return await parseEpub(await data.Body.transformToByteArray(), name);
       } else if (ext === "fb2") {
         return parseFb2(await data.Body.transformToString(), name);
       } else {
