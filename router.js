@@ -10,6 +10,7 @@ const auth = require("./auth/auth");
 const registration = require("./auth/create");
 const logout = require("./auth/logout");
 const updateMongo = require("./hooks/updateMongo");
+const flipPage = require("./hooks/flipPage");
 
 const router = new Router();
 
@@ -36,5 +37,6 @@ router.delete("/deleteOne/:filename", deleteOne);
 router.post("/registration", registration);
 router.post("/login", login);
 router.get("/logout", logout);
+router.post("/pageWasFlipped", flipPage);
 
 module.exports = router;
