@@ -37,7 +37,7 @@ const login = async (req, res, next) => {
           status: "success",
           code: 200,
           data: {
-            tokenMongo,
+            user,
           },
         });
       } else {
@@ -49,7 +49,8 @@ const login = async (req, res, next) => {
           status: "success",
           code: 200,
           data: {
-            tokenN,
+            ...user,
+            token: tokenN,
           },
         });
       }
@@ -66,7 +67,8 @@ const login = async (req, res, next) => {
       status: "success",
       code: 200,
       data: {
-        tokenN,
+        ...user._doc,
+        token: tokenN,
       },
     });
   }

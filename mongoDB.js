@@ -55,6 +55,22 @@ const schemaUser = new Schema({
     type: String,
     required: true,
   },
+  pages: {
+    type: [
+      {
+        filename: {
+          type: String,
+          required: true,
+        },
+        page: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    required: true,
+    default: [],
+  },
 });
 
 const Post = model("books", schemaPost);
