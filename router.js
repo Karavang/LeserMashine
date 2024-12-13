@@ -32,11 +32,11 @@ router.post(
   },
 );
 router.get("/synchronizeBooks", auth, updateMongo);
-router.delete("/deleteOne/:filename", deleteOne);
+router.delete("/deleteOne/:filename", auth, deleteOne);
+router.post("/pageWasFlipped", auth, flipPage);
 // Authorization
 router.post("/registration", registration);
 router.post("/login", login);
 router.get("/logout", logout);
-router.post("/pageWasFlipped", flipPage);
 
 module.exports = router;
