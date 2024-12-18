@@ -11,6 +11,7 @@ const registration = require("./auth/create");
 const logout = require("./auth/logout");
 const updateMongo = require("./hooks/updateMongo");
 const flipPage = require("./hooks/flipPage");
+const getBooksInRead = require("./hooks/getBooksInRead");
 
 const router = new Router();
 
@@ -34,6 +35,7 @@ router.post(
 router.get("/synchronizeBooks", auth, updateMongo);
 router.delete("/deleteOne/:filename", auth, deleteOne);
 router.post("/pageWasFlipped", auth, flipPage);
+router.get("/booksInRead", auth, getBooksInRead);
 // Authorization
 router.post("/registration", registration);
 router.post("/login", login);
