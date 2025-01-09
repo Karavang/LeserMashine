@@ -30,7 +30,7 @@ const getBookContent = async (req, res) => {
       console.error("File was not found after saving:", filePath);
     }
     // Return the file URL
-    res.status(200).send(`http://localhost:5555/books/${name}`);
+    res.status(200).send(`https://api.leser.cloud//books/${name}`);
   } catch (error) {
     if (error.name === "NoSuchKey") {
       res.status(404).send("File not found");
