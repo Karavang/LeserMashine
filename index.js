@@ -7,8 +7,8 @@ require("dotenv/config");
 const app = express();
 const startServer = async () => {
   await mongoConnect();
-  app.listen(5555, () => {
-    console.log("Server woke up");
+  app.listen(4444, () => {
+    console.log("Server woke up on 4444");
   });
 };
 const corsOpt = {
