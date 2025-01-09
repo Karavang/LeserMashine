@@ -11,7 +11,10 @@ const startServer = async () => {
     console.log("Server woke up");
   });
 };
-app.use(cors());
+const corsOpt = {
+  origin: ["http://localhost:5173", "https://leser.cloud"],
+};
+app.use(cors(corsOpt));
 app.use(express.json());
 app.use(express.static("./timeBooks"));
 app.use("/", router);
