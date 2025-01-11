@@ -17,7 +17,7 @@ const updateMongo = async (req, res) => {
 
     let fileNames = Contents.map((item) => item.Key.split("/").pop());
     fileNames.shift();
-    console.log(fileNames);
+
     for (const name of fileNames) {
       const bookInfo = await getBookInfoForMongo(name);
       const post = await Post.findOne({ filename: name });

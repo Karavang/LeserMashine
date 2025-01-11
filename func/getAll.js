@@ -19,7 +19,7 @@ const getAllBooks = async (req, res) => {
 
     //   for (const book of data.Contents) {
     //     const name = book.Key.split("/").pop();
-    //     console.log(name);
+
     //     const bookInfo = await getBookInfoForMongo(name);
 
     //     const post = await Post.findOne({ filename: name });

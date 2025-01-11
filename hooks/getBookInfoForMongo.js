@@ -7,7 +7,6 @@ const getBookInfo = async (name) => {
   const client = new S3Client({ region: "eu-west-3" });
   if (name !== undefined) {
     try {
-      console.log(name);
       const data = await client.send(
         new GetObjectCommand({
           Bucket: "elasticbeanstalk-eu-west-3-507450525930",

@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const router = require("./router");
-
+const path = require("path");
 const { mongoConnect } = require("./mongoDB");
 require("dotenv/config");
 const app = express();
@@ -16,7 +16,8 @@ const corsOpt = {
 };
 app.use(cors(corsOpt));
 app.use(express.json());
-app.use(express.static("./timeBooks"));
+app.use("/books", express.static(path.join(__dirname, "timeBooks/books")));
+
 app.use("/", router);
 
 app.use((req, res) => {
