@@ -14,7 +14,7 @@ const startServer = async () => {
 const corsOpt = {
   origin: ["http://localhost:5173", "https://leser.cloud"],
 };
-app.use(cors(corsOpt));
+// app.use(cors(corsOpt));
 app.use(express.json());
 app.use(express.static("./timeBooks"));
 
