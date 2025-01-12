@@ -15,7 +15,7 @@ const uploadToS3AndSaveToDb = async (req, res, next) => {
   try {
     const ext = getFileExtension(req.file.originalname);
 
-    if (ext !== "epub" && ext !== "fb2" && ext !== "pdf") {
+    if (ext !== "epub" && ext !== "fb2") {
       throw new Error("Invalid file type");
     }
 
