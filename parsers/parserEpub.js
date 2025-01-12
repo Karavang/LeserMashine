@@ -1,38 +1,47 @@
-const epubParser = require("epub-parser");
-const convertArrayToObject = require("../hooks/forParseEpub");
+const EPub = require("epub");
 const fs = require("fs");
+const path = require("path");
 
 const parseEpub = async (data, name) => {
-  // Write the EPUB data to a file first
+  const bookPath = path.join("./timeBooks/books", name);
+
   try {
-    fs.writeFileSync(`./timeBooks/books/${name}`, data);
+    // Write the EPUB data to a file
+    fs.writeFileSync(bookPath, data);
 
     return new Promise((resolve, reject) => {
-      // Parse the EPUB file once it's written
-      epubParser.open(
-        `http://localhost:4444/books/${name}`,
-        (err, epubData) => {
-          if (err) {
-            reject(`Error parsing EPUB file: ${err}`);
-          } else {
-            // Convert metadata to an object and extract relevant details
-            const metaData = convertArrayToObject(epubData.easy.simpleMeta);
-            const bookInfo = {
-              title: metaData.dc_title,
-              author: metaData.dc_creator,
-              date: metaData.dc_date,
-              lang: metaData.dc_language,
-              desc: metaData.dc_description,
-              filename: name,
-            };
+      const epub = new EPub(bookPath);
 
-            resolve(bookInfo);
-          }
-        },
-      );
+      epub.on("error", (err) => {
+        reject(`Error parsing EPUB file: ${err}`);
+      });
+
+      epub.on("end", () => {
+        // Extract metadata
+        const bookInfo = {
+          title: epub.metadata.title,
+          author: Array.isArray(epub.metadata.creator)
+            ? epub.metadata.creator[0]
+            : epub.metadata.creator,
+          date: epub.metadata.date,
+          lang: epub.metadata.language,
+          desc: epub.metadata.description,
+          filename: name,
+        };
+
+        resolve(bookInfo);
+      });
+
+      epub.parse();
     });
   } catch (err) {
     return Promise.reject(`Error writing EPUB file: ${err}`);
+  } finally {
+    try {
+      fs.unlinkSync(bookPath);
+    } catch (err) {
+      console.error("Error cleaning up temporary file:", err);
+    }
   }
 };
 
